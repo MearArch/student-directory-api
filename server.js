@@ -1,9 +1,13 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors'); // 1. Added cors import
 
 const app = express();
+
+// Middleware
 app.use(express.json());
+app.use(cors({ origin: 'http://localhost:5173' })); // 2. Added cors middleware
 
 // Import Routes
 const studentRoutes = require('./routes/students');
