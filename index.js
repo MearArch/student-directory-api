@@ -59,6 +59,7 @@ app.delete('/api/students/:id', (req, res) => {
   res.status(200).json({ message: `Student with ID ${studentId} deleted successfully` });
 });
 
+app.use('/api/upload', require('./routes/upload'));
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
