@@ -1,52 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const Student = require('../models/Student');
-const requireAuth = require('../middleware/auth');
 
-// GET /api/students - Protected
-router.get('/', requireAuth, async (req, res) => {
-    try {
-        const students = await Student.find();
-        res.json(students);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// POST /api/students - Protected
-router.post('/', requireAuth, async (req, res) => {
-    try {
-        const newStudent = await Student.create(req.body);
-        res.status(201).json(newStudent);
-    } catch (err) {
-        res.status(400).json({ error: err.message });
-    }
-});
-
-// PUT /api/students/:id - Protected
-router.put('/:id', requireAuth, async (req, res) => {
-    try {
-        const updatedStudent = await Student.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!updatedStudent) {
-            return res.status(404).json({ error: 'Student not found' });
-        }
-        res.json(updatedStudent);
-    } catch (err) {
-        res.status(400).json({ error: err.message });
-    }
-});
-
-// DELETE /api/students/:id - Protected
-router.delete('/:id', requireAuth, async (req, res) => {
-    try {
-        const deletedStudent = await Student.findByIdAndDelete(req.params.id);
-        if (!deletedStudent) {
-            return res.status(404).json({ error: 'Student not found' });
-        }
-        res.json({ message: 'Student deleted successfully' });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+// GET /api/students - Return all students with populated user details
+router.get('/', async (req, res) => {
+  try {
+    const students = await Student.find()
+      .populate('user', 'email role -_id'); // Field selection: populates email & role, excludes password
+    res.json(students);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 module.exports = router;

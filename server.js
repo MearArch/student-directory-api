@@ -16,7 +16,7 @@ const authRoutes = require('./routes/auth');
 // Register Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/students', studentRoutes);
-
+app.use('/api/stats', require('./routes/stats'));
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected successfully'))
